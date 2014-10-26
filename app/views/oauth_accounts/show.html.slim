@@ -10,14 +10,6 @@ p
   strong= model_class.human_attribute_name(:telephone) + ':'
   br
   = @oauth_account.telephone
-p
-  strong= model_class.human_attribute_name(:encrypted_password) + ':'
-  br
-  = @oauth_account.encrypted_password
-p
-  strong= model_class.human_attribute_name(:salt) + ':'
-  br
-  = @oauth_account.salt
 
 = link_to t('.back', :default => t("helpers.links.back")), oauth_accounts_path, :class => 'btn btn-default'
 '

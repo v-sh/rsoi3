@@ -1,4 +1,4 @@
-= form_for @oauth_account, html: { class: "form form-horizontal oauth_account" } do |f|
+/= form_for @oauth_account, html: { class: "form form-horizontal oauth_account" } do |f|
   .form-group
     = f.label :email, :class => 'control-label'
     .controls
@@ -22,3 +22,9 @@
   = f.submit nil, :class => 'btn btn-primary'
   '
   = link_to t('.cancel', :default => t("helpers.links.cancel")), oauth_accounts_path, :class => 'btn'
+
+= bootstrap_form_for @oauth_account do |f|
+  = f.email_field :email
+  = f.password_field :password
+  = f.telephone_field :telephone
+  = f.submit

@@ -69,6 +69,6 @@ class OauthAccountsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def oauth_account_params
-      params.require(:oauth_account).permit(:email, :telephone, :encrypted_password, :salt)
+      params.require(:oauth_account).permit(:email, :telephone, :password)
     end
 end
