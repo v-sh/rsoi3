@@ -1,5 +1,7 @@
 class OauthAccountsController < ApplicationController
   before_action :set_oauth_account, only: [:show, :edit, :update, :destroy]
+  
+  skip_before_action :check_auth, only: [:login, :new, :create]
 
   # GET /oauth_accounts
   # GET /oauth_accounts.json
@@ -28,6 +30,7 @@ class OauthAccountsController < ApplicationController
 
     respond_to do |format|
       if @oauth_account.save
+        do_login(@oauth_account)
         format.html { redirect_to @oauth_account, notice: 'Oauth account was successfully created.' }
         format.json { render :show, status: :created, location: @oauth_account }
       else
@@ -59,6 +62,15 @@ class OauthAccountsController < ApplicationController
       format.html { redirect_to oauth_accounts_url, notice: 'Oauth account was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def login
+    account = OauthAccount.auth_account(params[:email], params[:password])
+    do_login(account) if account
+  end
+
+  def logout
+    do_logout
   end
 
   private

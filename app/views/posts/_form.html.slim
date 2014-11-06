@@ -1,14 +1,9 @@
-= form_for @post, html: { class: "form form-horizontal post" } do |f|
-  .form-group
-    = f.label :user_id, :class => 'control-label'
-    .controls
-      = f.text_field :user_id, :class => 'form-control'
-    = error_span(@post[:user_id])
+= form_for [user, @post], html: { class: "form form-horizontal post" } do |f|
   .form-group
     = f.label :text, :class => 'control-label'
     .controls
-      = f.text_field :text, :class => 'form-control'
+      = f.text_area :text, :class => 'form-control'
     = error_span(@post[:text])
   = f.submit nil, :class => 'btn btn-primary'
   '
-  = link_to t('.cancel', :default => t("helpers.links.cancel")), posts_path, :class => 'btn'
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), user_posts_path, :class => 'btn'

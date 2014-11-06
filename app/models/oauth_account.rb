@@ -17,4 +17,10 @@ class OauthAccount < ActiveRecord::Base
   def clear_password
     self.password = nil
   end
+
+  def self.auth_account(account_email, password)
+    return unless account = self.where(email: account_email).first
+    account if BCrypt::Engine.hash_secret(password, account.salt) == account.encrypted_password
+  end
+
 end
