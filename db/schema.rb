@@ -11,10 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141108125055) do
+ActiveRecord::Schema.define(version: 20141108133721) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "account_app_permissions", force: true do |t|
+    t.integer  "oauth_account_id"
+    t.integer  "api_application_id"
+    t.string   "permitted_scopes"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "api_applications", force: true do |t|
     t.string   "name"
