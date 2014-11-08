@@ -1,6 +1,6 @@
 class CreateApplications < ActiveRecord::Migration
   def change
-    create_table :applications do |t|
+    create_table :api_applications do |t|
       t.string :name
       t.string :client_id
       t.string :client_secret
