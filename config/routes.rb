@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  root 'users#index'
+
   resources :oauth_accounts do
     collection do
       get :login
@@ -6,9 +8,14 @@ Rails.application.routes.draw do
     end
   end
 
-
   resources :users do
     resources :posts
+  end
+
+  namespace :oauth, only: [] do
+      get :auth
+      post :confirm
+      post :token
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

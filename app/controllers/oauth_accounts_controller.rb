@@ -31,7 +31,7 @@ class OauthAccountsController < ApplicationController
     respond_to do |format|
       if @oauth_account.save
         do_login(@oauth_account)
-        format.html { redirect_to @oauth_account, notice: 'Oauth account was successfully created.' }
+        format.html { redirect_to params[:redirect_uri] || users_url }
         format.json { render :show, status: :created, location: @oauth_account }
       else
         format.html { render :new }
@@ -66,7 +66,10 @@ class OauthAccountsController < ApplicationController
 
   def login
     account = OauthAccount.auth_account(params[:email], params[:password])
-    do_login(account) if account
+    if account
+      do_login(account)
+      redirect_to params[:redirect_uri] || users_url
+    end
   end
 
   def logout

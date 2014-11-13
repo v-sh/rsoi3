@@ -1,4 +1,5 @@
 class PostsController < ApplicationController
+  require_permission :posts
   before_action :set_post, only: [:show, :edit, :update, :destroy]
 
   helper_method :user

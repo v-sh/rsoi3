@@ -41,6 +41,7 @@ gem 'bcrypt', '~> 3.1.7'
 # gem 'debugger', group: [:development, :test]
 
 gem 'slim-rails'
+gem "strip_attributes"
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'

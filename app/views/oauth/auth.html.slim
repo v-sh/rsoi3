@@ -1,0 +1,9 @@
+= bootstrap_form_tag url: oauth_confirm_path, html: {class: 'form-oauth-auth'}, method: :post do |f|
+  p="Приложение #{api_app.name} выпрашивает у вас доступ к #{requested_scopes.to_a}"
+  = f.hidden_field :redirect_url, value: params[:redirect_url]
+  = f.hidden_field :scope, value: params[:scope]
+  = f.hidden_field :state, value: params[:state]
+  = f.hidden_field :client_id, value: params[:client_id]
+  = f.submit "Разрешить", class: 'btn btn-lg btn-warning btn-block'
+  a.btn.btn-lg.btn-danger.btn-block
+    |Запретить

@@ -1,4 +1,6 @@
 class OauthAccount < ActiveRecord::Base
+  has_many :account_app_permissions
+
   before_save :encrypt_password
   after_save :clear_password
 

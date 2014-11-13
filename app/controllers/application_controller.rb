@@ -4,10 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :check_auth
+  include PermissionScope::Filter
 
   def do_login(oauth_account)
     session[:account_id] = oauth_account.id
-    redirect_to users_url
   end
 
   def do_logout
@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
 
   def check_auth
     if !account
-      redirect_to login_oauth_accounts_url
+      redirect_to login_oauth_accounts_url, redirect_uri: request.original_url
     end
   end
 
