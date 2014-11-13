@@ -1,0 +1,25 @@
+%head
+  %link{rel:"stylesheet",href:"https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"}
+%body
+  .navbar.navbar-default
+    .container
+      .navbar-header
+        %a.navbar-brand{href: "/"}
+          G+Friends
+      .collapse.navbar-collapse
+        %ul.nav.navbar-nav.navbar-right
+          %li
+            %a{href: "/logout"}
+              Logout
+  .container
+    .row
+      - @friends.each do |friend|
+        .col-sm-6.col-md-4
+          .thumbnail
+            %img{src: make_big_ava(friend["image"]["url"])}
+            .caption
+              %h3
+                = friend["displayName"]
+    
+
+
