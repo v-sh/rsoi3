@@ -3,7 +3,8 @@ class OauthCode < ActiveRecord::Base
 
   delegate :oauth_account, to: :account_app_permission
   delegate :api_application, to: :account_app_permission
-  before_create :generate_code
+  delegate :scopes, to: :account_app_permission
+  before_validation :generate_code, on: :create
 
   strip_attributes
   validates_presence_of :code
@@ -22,6 +23,11 @@ class OauthCode < ActiveRecord::Base
   def generate_token
     self.update(token: SecureRandom.hex(50))
     self.token
+  end
+
+  def self.get_by_token(token)
+    return if !token || token == ""
+    self.where(token: token).first
   end
 
   protected

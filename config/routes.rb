@@ -5,11 +5,15 @@ Rails.application.routes.draw do
     collection do
       get :login
       get :logout
+      get :me
     end
   end
 
   resources :users do
     resources :posts
+    collection do
+      get :count
+    end
   end
 
   namespace :oauth, only: [] do

@@ -76,6 +76,10 @@ class OauthAccountsController < ApplicationController
     do_logout
   end
 
+  def me
+    render json: account
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_oauth_account

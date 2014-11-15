@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   before_action :check_auth
+  before_action :check_token_expiration
   include PermissionScope::Filter
 
   def do_login(oauth_account)
@@ -16,12 +17,27 @@ class ApplicationController < ActionController::Base
   end
 
   def account
-    OauthAccount.where(id: session[:account_id]).first
+    OauthAccount.where(id: session[:account_id]).first ||
+      api_token && api_token.oauth_account
+  end
+
+  def api_token
+    OauthCode.get_by_token(get_api_token_params)
+  end
+
+  def get_api_token_params
+    params[:access_token]
   end
 
   def check_auth
     if !account
       redirect_to login_oauth_accounts_url, redirect_uri: request.original_url
+    end
+  end
+
+  def check_token_expiration
+    if api_token
+      render json: {error: "token expired"} unless Time.now < api_token.updated_at + 1.hour
     end
   end
 

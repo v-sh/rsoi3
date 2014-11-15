@@ -10,16 +10,29 @@ module PermissionScope
   end
 
   module Filter
+    
+    module ClassMethods
 
-    def self.require_permission(perms)
-      perms = Array(perms)
-      skip_before_action :check_permission_app_scope
-      before_action :check_permission_app_scope
-      self.define_method :check_permission_app_scope do
-        if api_app
-          render json: {error: :access_denied}, status: 403 unless perms.map{|perm| api_app.scopes.include? perm}.all?
+      def require_permission(scopes, params = {})
+        scopes = Array(scopes)
+        scopes.each do |scope|
+          skip_before_action "check_app_permission_#{scope}", params
+          before_action "check_app_permission_#{scope}", params
         end
       end
+
+    end
+      
+    PermittedScopes.each do |scope|
+      define_method "check_app_permission_#{scope}" do
+        if api_token
+          render json: {error: "this application can't access #{scope}"}, status: 403 unless api_token.scopes.include? scope
+        end
+      end
+    end
+    
+    def self.included(base)
+      base.extend ClassMethods
     end
   end
 end

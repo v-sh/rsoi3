@@ -1,11 +1,16 @@
 class UsersController < ApplicationController
-  require_permission(:users)
+  require_permission :users, except: :count
+  skip_before_action :check_auth, only: :count
   before_action :set_user, only: [:show, :edit, :update, :destroy]
 
   # GET /users
   # GET /users.json
   def index
-    @users = User.all
+    @users = User.all.paginate(page: params[:page], per_page: params[:per_page])
+    respond_to do |format|
+      format.html { render }
+      format.json { render json: @users}
+    end
   end
 
   # GET /users/1
@@ -59,6 +64,13 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def count
+    respond_to do |format|
+      format.html { render text: "#{User.count}" }
+      format.json { render json: {count: User.count}}
     end
   end
 

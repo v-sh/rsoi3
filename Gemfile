@@ -43,6 +43,9 @@ gem 'bcrypt', '~> 3.1.7'
 gem 'slim-rails'
 gem "strip_attributes"
 
+gem 'will_paginate'
+gem 'api-pagination'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0.0'
 end

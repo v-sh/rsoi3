@@ -27,6 +27,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    api-pagination (3.1.0)
     arel (5.0.1.20140414130214)
     bcrypt (3.1.9)
     bootstrap_form (2.2.0)
@@ -169,11 +170,13 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    will_paginate (3.0.7)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
+  api-pagination
   bcrypt (~> 3.1.7)
   bootstrap_form
   coffee-rails (~> 4.0.0)
@@ -195,3 +198,4 @@ DEPENDENCIES
   twitter-bootstrap-rails
   uglifier (>= 1.3.0)
   unicorn
+  will_paginate

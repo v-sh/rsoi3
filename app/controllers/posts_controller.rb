@@ -6,7 +6,11 @@ class PostsController < ApplicationController
   # GET /posts
   # GET /posts.json
   def index
-    @posts = user.posts
+    @posts = user.posts.paginate(page: params[:page], per_page: params[:per_page])
+    respond_to do |format|
+      format.html { render }
+      format.json { render json: @posts}
+    end
   end
 
   # GET /posts/1

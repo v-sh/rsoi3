@@ -13,10 +13,11 @@
               Logout
   .container
     .row
+      %h2
       - @friends.each do |friend|
         .col-sm-6.col-md-4
           .thumbnail
-            %img{src: make_big_ava(friend["image"]["url"])}
+            %img{src: make_big_ava(friend["image_url"])}
             .caption
               %h3
                 = friend["displayName"]

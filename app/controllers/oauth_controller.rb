@@ -14,6 +14,7 @@ class OauthController < ApplicationController
         perm &&
           begin
             perm.scopes += requested_scopes
+            perm.save &&
             perm.oauth_codes.create
           end
       end
@@ -28,7 +29,7 @@ class OauthController < ApplicationController
   def token
     token = OauthCode.trade_to_token(params)
     if token
-      render json: {token: token}
+      render json: {token: token, token_expired: token.updated_at + 1.hour}
     else
       render json: {error: :incorrect_request}
     end
