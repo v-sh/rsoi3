@@ -1,44 +1,40 @@
 class UsersController < ApplicationController
   require_permission :users, except: :count
   skip_before_action :check_auth, only: :count
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
 
-  # GET /users
-  # GET /users.json
+  helper_method :user
+  helper_method :users
+
   def index
-    @users = User.all.paginate(page: params[:page], per_page: params[:per_page])
+    load_users
     respond_to do |format|
       format.html { render }
       format.json { render json: @users}
     end
   end
 
-  # GET /users/1
-  # GET /users/1.json
   def show
+    load_user
   end
 
-  # GET /users/new
   def new
-    @user = User.new
+    build_user
   end
 
-  # GET /users/1/edit
   def edit
+    load_user
+    build_user
   end
 
-  # POST /users
-  # POST /users.json
   def create
-    @user = User.new(user_params)
-
+    build_user
     respond_to do |format|
-      if @user.save
-        format.html { redirect_to @user, notice: 'User was successfully created.' }
-        format.json { render :show, status: :created, location: @user }
+      if user.save
+        format.html { redirect_to user, notice: 'User was successfully created.' }
+        format.json { render :show, status: :created, location: user }
       else
         format.html { render :new }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -46,13 +42,15 @@ class UsersController < ApplicationController
   # PATCH/PUT /users/1
   # PATCH/PUT /users/1.json
   def update
+    load_user
+    build_user
     respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to @user, notice: 'User was successfully updated.' }
-        format.json { render :show, status: :ok, location: @user }
+      if user.save
+        format.html { redirect_to user, notice: 'User was successfully updated.' }
+        format.json { render :show, status: :ok, location: @ser }
       else
         format.html { render :edit }
-        format.json { render json: @user.errors, status: :unprocessable_entity }
+        format.json { render json: user.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -60,7 +58,8 @@ class UsersController < ApplicationController
   # DELETE /users/1
   # DELETE /users/1.json
   def destroy
-    @user.destroy
+    load_user
+    user.destroy
     respond_to do |format|
       format.html { redirect_to users_url, notice: 'User was successfully destroyed.' }
       format.json { head :no_content }
@@ -68,20 +67,41 @@ class UsersController < ApplicationController
   end
 
   def count
+    count = user_scope.count
     respond_to do |format|
-      format.html { render text: "#{User.count}" }
-      format.json { render json: {count: User.count}}
+      format.html { render text: "#{count}" }
+      format.json { render json: {count: count}}
     end
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
+  def load_user
+    @user ||= user_scope.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def user_params
-      params.require(:user).permit(:displayName, :gplus_url, :image_url, :about_me, :gender, :gplus_id)
-    end
+  def load_users
+    @users ||= user_scope.paginate(page: params[:page], per_page: params[:per_page])
+  end
+
+  def build_user
+    @user ||= user_scope.build
+    @user.attributes = user_params
+  end
+    
+  def user_params
+    user_params = params[:user]
+    user_params ? user_params.permit(:displayName, :gplus_url, :image_url, :about_me, :gender, :gplus_id) : {}
+  end
+
+  def user_scope
+    User.all
+  end
+
+  def user
+    @user
+  end
+
+  def users
+    @users
+  end
 end
