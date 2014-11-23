@@ -20,6 +20,7 @@ Rails.application.routes.draw do
       get :auth
       post :confirm
       post :token
+      post :refresh_token
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

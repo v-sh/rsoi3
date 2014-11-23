@@ -27,7 +27,16 @@ class OauthController < ApplicationController
   end
 
   def token
-    token = OauthCode.trade_to_token(params)
+    token = OauthCode.trade_to_token(params.permit(:code, :client_id, :client_secret))
+    if token
+      render json: {token: token.token, token_expired: token.updated_at + 1.hour}
+    else
+      render json: {error: :incorrect_request}
+    end
+  end
+
+  def refresh_token
+    token = OauthCode.trade_to_token(params.permit(:refresh_token, :client_id, :client_secret))
     if token
       render json: {token: token.token, token_expired: token.updated_at + 1.hour}
     else
