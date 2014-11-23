@@ -1,66 +1,55 @@
 class PostsController < ApplicationController
   require_permission :posts
-  before_action :set_post, only: [:show, :edit, :update, :destroy]
 
-  helper_method :user
-  # GET /posts
-  # GET /posts.json
+  helper_method :post
+  helper_method :posts
   def index
-    @posts = user.posts.paginate(page: params[:page], per_page: params[:per_page])
+    load_posts
     respond_to do |format|
       format.html { render }
-      format.json { render json: @posts}
+      format.json { render json: posts}
     end
   end
 
-  # GET /posts/1
-  # GET /posts/1.json
-  def show
-  end
-
-  # GET /posts/new
   def new
-    @post = Post.new
+    build_post
   end
 
-  # GET /posts/1/edit
-  def edit
+  def show
+    load_post
+    build_post
   end
 
-  # POST /posts
-  # POST /posts.json
   def create
-    @post = user.posts.new(post_params)
-
+    build_post
     respond_to do |format|
-      if @post.save
-        format.html { redirect_to [user, @post], notice: 'Post was successfully created.' }
-        format.json { render :show, status: :created, location: @post }
+      if post.save
+        format.html { redirect_to post, notice: 'Post was successfully created.' }
+        format.json { render :show, status: :created, location: post }
       else
         format.html { render :new }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.json { render json: post.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # PATCH/PUT /posts/1
-  # PATCH/PUT /posts/1.json
   def update
+    load_post
+    build_post
     respond_to do |format|
-      if @post.update(post_params)
-        format.html { redirect_to [user, @post], notice: 'Post was successfully updated.' }
-        format.json { render :show, status: :ok, location: @post }
+      if post.save
+        format.html { redirect_to post, notice: 'Post was successfully updated.' }
+        format.json { render :show, status: :ok, location: post }
       else
         format.html { render :edit }
-        format.json { render json: @post.errors, status: :unprocessable_entity }
+        format.json { render json: post.errors, status: :unprocessable_entity }
       end
     end
   end
 
-  # DELETE /posts/1
-  # DELETE /posts/1.json
   def destroy
-    @post.destroy
+    load_post
+    post.destroy
     respond_to do |format|
       format.html { redirect_to user_posts_url, notice: 'Post was successfully destroyed.' }
       format.json { head :no_content }
@@ -68,17 +57,33 @@ class PostsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_post
-      @post = user.posts.find(params[:id])
-    end
+  def build_post
+    @post ||= posts_scope.build
+    @post.attributes = post_params
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def post_params
-      params.require(:post).permit(:text)
-    end
+  def load_post
+    @post ||= posts_scope.find(params[:id])
+  end
 
-    def user
-      @user ||= User.find(params[:user_id])
-    end
+  def load_posts
+    @posts ||= posts_scope.paginate(page: params[:page], per_page: params[:per_page])
+  end
+
+  def posts_scope
+    Post.all
+  end
+
+  def post_params
+    post_params = params[:post]
+    post_params ? post_params.permit(:text, :user_id) : {}
+  end
+
+  def post
+    @post
+  end
+
+  def posts
+    @posts
+  end
 end

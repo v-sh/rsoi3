@@ -10,11 +10,11 @@ Rails.application.routes.draw do
   end
 
   resources :users do
-    resources :posts
     collection do
       get :count
     end
   end
+  resources :posts, only: [:index, :new, :show, :destroy, :create, :update]
 
   namespace :oauth, only: [] do
       get :auth
