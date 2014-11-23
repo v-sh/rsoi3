@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
   def check_auth
     if !account
       respond_to do |format|
-        format.html {redirect_to login_oauth_accounts_url, redirect_uri: request.original_url}
+        format.html {redirect_to login_oauth_accounts_url(redirect_uri: request.original_url)}
         format.json {render json: {error: 'unauthorized'}, status: 401 }
       end
     end
