@@ -22,7 +22,7 @@ class OauthCode < ActiveRecord::Base
 
   def generate_token
     self.update(token: SecureRandom.hex(50))
-    self.token
+    self
   end
 
   def self.get_by_token(token)
