@@ -1,0 +1,30 @@
+/= form_for @oauth_account, html: { class: "form form-horizontal oauth_account" } do |f|
+  .form-group
+    = f.label :email, :class => 'control-label'
+    .controls
+      = f.text_field :email, :class => 'form-control'
+    = error_span(@oauth_account[:email])
+  .form-group
+    = f.label :telephone, :class => 'control-label'
+    .controls
+      = f.text_field :telephone, :class => 'form-control'
+    = error_span(@oauth_account[:telephone])
+  .form-group
+    = f.label :encrypted_password, :class => 'control-label'
+    .controls
+      = f.text_field :encrypted_password, :class => 'form-control'
+    = error_span(@oauth_account[:encrypted_password])
+  .form-group
+    = f.label :salt, :class => 'control-label'
+    .controls
+      = f.text_field :salt, :class => 'form-control'
+    = error_span(@oauth_account[:salt])
+  = f.submit nil, :class => 'btn btn-primary'
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), oauth_accounts_path, :class => 'btn'
+
+= bootstrap_form_for @oauth_account do |f|
+  = f.email_field :email
+  = f.password_field :password
+  = f.telephone_field :telephone
+  = f.submit

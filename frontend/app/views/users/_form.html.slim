@@ -1,0 +1,34 @@
+= form_for @user, html: { class: "form form-horizontal user" } do |f|
+  .form-group
+    = f.label :displayName, :class => 'control-label'
+    .controls
+      = f.text_field :displayName, :class => 'form-control'
+    = error_span(@user[:displayName])
+  .form-group
+    = f.label :gplus_url, :class => 'control-label'
+    .controls
+      = f.text_field :gplus_url, :class => 'form-control'
+    = error_span(@user[:gplus_url])
+  .form-group
+    = f.label :image_url, :class => 'control-label'
+    .controls
+      = f.text_field :image_url, :class => 'form-control'
+    = error_span(@user[:image_url])
+  .form-group
+    = f.label :about_me, :class => 'control-label'
+    .controls
+      = f.text_field :about_me, :class => 'form-control'
+    = error_span(@user[:about_me])
+  .form-group
+    = f.label :gender, :class => 'control-label'
+    .controls
+      = f.text_field :gender, :class => 'form-control'
+    = error_span(@user[:gender])
+  .form-group
+    = f.label :gplus_id, :class => 'control-label'
+    .controls
+      = f.text_field :gplus_id, :class => 'form-control'
+    = error_span(@user[:gplus_id])
+  = f.submit nil, :class => 'btn btn-primary'
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), users_path, :class => 'btn'
