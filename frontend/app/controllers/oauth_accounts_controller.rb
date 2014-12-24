@@ -30,8 +30,7 @@ class OauthAccountsController < ApplicationController
 
     respond_to do |format|
       if @oauth_account.save
-        do_login(@oauth_account)
-        format.html { redirect_to params[:redirect_uri] || users_url }
+        format.html { redirect_to login_oauth_accounts_url(redirect_uri: params[:redirect_uri]) }
         format.json { render :show, status: :created, location: @oauth_account }
       else
         format.html { render :new }
@@ -65,9 +64,17 @@ class OauthAccountsController < ApplicationController
   end
 
   def login
-    account = OauthAccount.auth_account(params[:email], params[:password])
+    account =
+      begin
+        self.soa_session
+        responce = soa_session_conn[session[:soa_session_key]]["login"].post email: params[:email], password: params[:password]
+        self.soa_session = JSON.parse(responce).deep_symbolize_keys[:obj_data]
+        OauthAccount.find(soa_session[:account_id])
+      rescue
+        nil
+      end
+    # account = OauthAccount.auth_account(params[:email], params[:password])
     if account
-      do_login(account)
       redirect_to params[:redirect_uri] || users_url
     end
   end

@@ -51,7 +51,7 @@ class PostsController < ApplicationController
     load_post
     post.destroy
     respond_to do |format|
-      format.html { redirect_to user_posts_url, notice: 'Post was successfully destroyed.' }
+      format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -67,7 +67,7 @@ class PostsController < ApplicationController
   end
 
   def load_posts
-    @posts ||= posts_scope.paginate(page: params[:page], per_page: params[:per_page])
+    @posts ||= posts_scope.load_collection(params.permit(:page, :per_page))
   end
 
   def posts_scope

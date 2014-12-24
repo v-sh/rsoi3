@@ -12,7 +12,13 @@
 /db/*.sqlite3-journal
 
 # Ignore all logfiles and tempfiles.
-/log/*.log
-/tmp
+frontend/log/*.log
+frontend/tmp
+backend_users/log/*.log
+backend_users/tmp
+backend_posts/log/*.log
+backend_posts/tmp
+session_manager/log/*.log
+session_manager/tmp
 *#
 *~

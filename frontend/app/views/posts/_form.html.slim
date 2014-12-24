@@ -1,4 +1,4 @@
-= bootstrap_form_for post, layout: :horizontal do |f|
+= bootstrap_form_for post, layout: :horizontal, url: {action: post.id ? :update : :create}, method: post.id ? :put : :post do |f|
   = f.text_area :text
   = f.collection_select :user_id, User.all, :id, :displayName
   = f.primary

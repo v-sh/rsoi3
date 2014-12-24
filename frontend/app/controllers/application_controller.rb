@@ -1,10 +1,11 @@
+#FRONT
 class ApplicationController < ActionController::Base
-  # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
+
   protect_from_forgery with: :exception
 
   before_action :check_auth
   before_action :check_token_expiration
+  after_action :soa_session_save
   include PermissionScope::Filter
 
   def do_login(oauth_account)
@@ -12,12 +13,12 @@ class ApplicationController < ActionController::Base
   end
 
   def do_logout
-    session[:account_id] = nil
+    soa_session[:account_id] = nil
     redirect_to login_oauth_accounts_url
   end
 
   def account
-    OauthAccount.where(id: session[:account_id]).first ||
+    OauthAccount.where(id: soa_session[:account_id]).first ||
       api_token && api_token.oauth_account
   end
 
@@ -32,7 +33,7 @@ class ApplicationController < ActionController::Base
   def check_auth
     if !account
       respond_to do |format|
-        format.html {redirect_to login_oauth_accounts_url(redirect_uri: request.original_url)}
+        format.html {redirect_to login_oauth_accounts_url(redirect_uri: params[:redirect_uri])}
         format.json {render json: {error: 'unauthorized'}, status: 401 }
       end
     end
@@ -42,6 +43,42 @@ class ApplicationController < ActionController::Base
     if api_token
       render json: {error: "token expired"} unless Time.now < api_token.updated_at + 1.hour
     end
+  end
+
+  def soa_session
+    @soa_session ||= 
+      begin
+        base = soa_session_conn
+        if session[:soa_session_key]
+          begin
+            JSON.parse(base[session[:soa_session_key]].get).deep_symbolize_keys
+          rescue
+            create_session
+          end
+        else
+          create_session
+        end[:obj_data]
+      end || {}
+  end
+
+  def soa_session=(soa_session)
+    @soa_session = soa_session
+  end
+
+  def create_session
+    base = soa_session_conn
+    JSON.parse(base.post({})).deep_symbolize_keys.tap do |new_session|
+      session[:soa_session_key] = new_session[:key]
+    end
+  end
+  
+  def soa_session_save
+    soa_session_conn[session[:soa_session_key]].put({session: @soa_session})
+  end
+
+  private
+  def soa_session_conn
+    RestClient::Resource.new 'localhost:4000/sessions'
   end
 
 end

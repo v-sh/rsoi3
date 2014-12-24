@@ -55,8 +55,6 @@ class UsersController < ApplicationController
     end
   end
 
-  # DELETE /users/1
-  # DELETE /users/1.json
   def destroy
     load_user
     user.destroy
@@ -80,11 +78,11 @@ class UsersController < ApplicationController
   end
 
   def load_users
-    @users ||= user_scope.paginate(page: params[:page], per_page: params[:per_page])
+    @users ||= user_scope.load_collection(params.permit(:page, :per_page))
   end
 
   def build_user
-    @user ||= user_scope.build
+    @user ||= user_scope.new
     @user.attributes = user_params
   end
     
@@ -94,7 +92,7 @@ class UsersController < ApplicationController
   end
 
   def user_scope
-    User.all
+    User
   end
 
   def user

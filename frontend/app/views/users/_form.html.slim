@@ -1,4 +1,4 @@
-= form_for @user, html: { class: "form form-horizontal user" } do |f|
+= form_for @user, html: { class: "form form-horizontal user" }, url: {action: @user.id ? :update : :create}, method: @user.id ? :put : :post  do |f|
   .form-group
     = f.label :displayName, :class => 'control-label'
     .controls

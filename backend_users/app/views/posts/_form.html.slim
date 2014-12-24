@@ -1,0 +1,6 @@
+= bootstrap_form_for post, layout: :horizontal do |f|
+  = f.text_area :text
+  = f.collection_select :user_id, User.all, :id, :displayName
+  = f.primary
+  '
+  = link_to t('.cancel', :default => t("helpers.links.cancel")), posts_path, :class => 'btn'

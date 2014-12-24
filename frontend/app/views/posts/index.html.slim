@@ -10,7 +10,7 @@ table class="table table-striped"
       th= model_class.human_attribute_name(:created_at)
       th=t '.actions', :default => t("helpers.actions")
   tbody
-    - @posts.each do |post|
+    - @posts[:items].each do |post|
       tr
         td= link_to post.id, post_path(post)
         td= post.user.displayName

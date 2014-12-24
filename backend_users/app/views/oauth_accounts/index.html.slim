@@ -1,0 +1,29 @@
+- model_class = OauthAccount
+div class="page-header"
+  h1=t '.title', :default => model_class.model_name.human.pluralize.titleize
+table class="table table-striped"
+  thead
+    tr
+      th= model_class.human_attribute_name(:id)
+      th= model_class.human_attribute_name(:email)
+      th= model_class.human_attribute_name(:telephone)
+      th= model_class.human_attribute_name(:encrypted_password)
+      th= model_class.human_attribute_name(:salt)
+      th= model_class.human_attribute_name(:created_at)
+      th=t '.actions', :default => t("helpers.actions")
+  tbody
+    - @oauth_accounts.each do |oauth_account|
+      tr
+        td= link_to oauth_account.id, oauth_account_path(oauth_account)
+        td= oauth_account.email
+        td= oauth_account.telephone
+        td= oauth_account.encrypted_password
+        td= oauth_account.salt
+        td=l oauth_account.created_at
+        td
+          = link_to t('.edit', :default => t("helpers.links.edit")), edit_oauth_account_path(oauth_account), :class => 'btn btn-default btn-xs'
+          '
+          = link_to t('.destroy', :default => t("helpers.links.destroy")), oauth_account_path(oauth_account), :method => :delete, :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) }, :class => 'btn btn-xs btn-danger'
+
+= link_to t('.new', :default => t("helpers.links.new")), new_oauth_account_path, :class => 'btn btn-primary'
+
